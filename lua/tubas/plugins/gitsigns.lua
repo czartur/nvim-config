@@ -28,26 +28,39 @@ return {
         end
 
         -- Navigation
-        map('n', ']c', function() if vim.wo.diff then vim.cmd('normal ]c') else gs.next_hunk() end end)
-        map('n', '[c', function() if vim.wo.diff then vim.cmd('normal [c') else gs.prev_hunk() end end)
+        map('n', ']c', function()
+          if vim.wo.diff then
+            vim.cmd('normal ]c')
+          else
+            gs.next_hunk()
+          end
+        end, { desc = "Next Git hunk" })
+
+        map('n', '[c', function()
+          if vim.wo.diff then
+            vim.cmd('normal [c')
+          else
+            gs.prev_hunk()
+          end
+        end, { desc = "Previous Git hunk" })
 
         -- Actions
-        map('n', '<leader>hs', gs.stage_hunk)
-        map('n', '<leader>hr', gs.reset_hunk)
-        map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-        map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-        map('n', '<leader>hS', gs.stage_buffer)
-        map('n', '<leader>hR', gs.reset_buffer)
-        map('n', '<leader>hp', gs.preview_hunk)
-        map('n', '<leader>hi', gs.preview_hunk_inline)
-        map('n', '<leader>hb', function() gs.blame_line { full = true } end)
-        map('n', '<leader>hd', gs.diffthis)
-        map('n', '<leader>hD', function() gs.diffthis('~') end)
-        map('n', '<leader>hQ', function() gs.setqflist('all') end)
-        map('n', '<leader>hq', gs.setqflist)
+        map('n', '<leader>hr', gs.reset_hunk, { desc = "Reset current hunk" })
+        map('v', '<leader>hr', function()
+          gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') }
+        end, { desc = "Reset selected hunk (visual mode)" })
+        map('n', '<leader>hR', gs.reset_buffer, { desc = "Reset entire buffer" })
+        map('n', '<leader>hp', gs.preview_hunk, { desc = "Preview hunk" })
+        map('n', '<leader>hi', gs.preview_hunk_inline, { desc = "Preview hunk inline" })
+        map('n', '<leader>hb', function()
+          gs.blame_line { full = true }
+        end, { desc = "Blame line (full)" })
+        map('n', '<leader>hd', gs.diffthis, { desc = "Diff current file against index" })
+        map('n', '<leader>hD', function()
+          gs.diffthis('~')
+        end, { desc = "Diff current file against previous commit" })
 
         -- Toggles
-        map('n', '<leader>tb', gs.toggle_current_line_blame)
         map('n', '<leader>tw', gs.toggle_word_diff)
 
         -- Text object
